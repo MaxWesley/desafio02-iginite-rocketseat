@@ -1,14 +1,6 @@
-import { useState, useEffect } from 'react'
+import '../styles/content.scss';
 
 import { MovieCard } from './MovieCard';
-
-import { api } from '../services/api';
-interface GenreResponseProps {
-  id: number;
-  name: 'action' | 'comedy' | 'documentary' | 'drama' | 'horror' | 'family';
-  title: string;
-}
-
 interface MovieProps {
   imdbID: string;
   Title: string;
@@ -19,31 +11,18 @@ interface MovieProps {
   }>;
   Runtime: string;
 }
-
 interface ContentProps {
-  genreId: number;
+  selectedGenreTitle: string;
+  movies: MovieProps[]
 }
 
 export function Content(props: ContentProps) {
-  const [selectedGenre, setSelectedGenre] = useState<GenreResponseProps>({} as GenreResponseProps);
-  const [movies, setMovies] = useState<MovieProps[]>([]);
-
-  useEffect(() => {
-    // pega filmes de cada genero
-    api.get<MovieProps[]>(`movies/?Genre_id=${props.genreId}`).then(response => {
-      setMovies(response.data);
-    });
-
-    // pega genero clicado no menu
-    api.get<GenreResponseProps>(`genres/${props.genreId}`).then(response => {
-      setSelectedGenre(response.data);
-    })
-  }, [props.genreId]);
+  const { selectedGenreTitle, movies } = props;
 
   return (
     <div className="container">
       <header>
-        <span className="category">Categoria:<span> {selectedGenre.title}</span></span>
+        <span className="category">Categoria:<span> {selectedGenreTitle}</span></span>
       </header>
       <main>
         <div className="movies-list">
